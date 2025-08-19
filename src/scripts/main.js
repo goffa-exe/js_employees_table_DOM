@@ -2,6 +2,7 @@
 
 const table = document.querySelector('table');
 const tBody = table.tBodies[0];
+let activeRow = null;
 
 const offices = [
   'Tokyo',
@@ -19,7 +20,6 @@ const currentSort = {
 
 table.addEventListener('click', (e) => {
   const th = e.target.closest('th');
-  const tr = e.target.closest('tbody tr');
 
   if (th) {
     const columnIndex = th.cellIndex;
@@ -34,16 +34,19 @@ table.addEventListener('click', (e) => {
     sortTable(table, columnIndex, currentSort.direction);
   }
 
+  const tr = e.target.closest('tbody tr');
+
   if (tr) {
-    [...table.querySelectorAll('tbody tr')].forEach(
-      (row) => row.classList.remove('active'),
-      // eslint-disable-next-line function-paren-newline
-    );
+    if (activeRow) {
+      activeRow.classList.remove('active');
+    }
     tr.classList.add('active');
+    activeRow = tr; // Store reference to the new active row
   }
 });
 
 function sortTable(tableToSort, columnIndex, direction = 'asc') {
+  const tBodyToSort = tableToSort.tBodies[0];
   const rows = Array.from(tBody.rows);
 
   rows.sort((rowA, rowB) => {
@@ -64,7 +67,7 @@ function sortTable(tableToSort, columnIndex, direction = 'asc') {
     return direction === 'asc' ? compare : -compare;
   });
 
-  tBody.innerHTML = '';
+  tBodyToSort.innerHTML = '';
   rows.forEach((row) => tBody.appendChild(row));
 }
 
@@ -143,7 +146,7 @@ form.addEventListener('submit', (e) => {
   const userName = form.querySelector('[name="name"]').value;
   const position = form.querySelector('[name="position"]').value;
   const office = form.querySelector('[name="office"]').value;
-  const age = form.querySelector('[name="age"]').value;
+  const age = Number(form.querySelector('[name="age"]').value);
   const salaryRaw = Number(form.querySelector('[name="salary"]').value);
 
   if (userName.length < 4) {
