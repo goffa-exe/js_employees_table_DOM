@@ -146,8 +146,8 @@ form.addEventListener('submit', (e) => {
   const age = form.querySelector('[name="age"]').value;
   const salaryRaw = Number(form.querySelector('[name="salary"]').value);
 
-  if (userName.length < 4 || position.length) {
-    showNotification('Name and Position must be at least 4 letters', 'error');
+  if (userName.length < 4) {
+    showNotification('Name must be at least 4 letters', 'error');
 
     return;
   }
@@ -183,4 +183,5 @@ function showNotification(message, type) {
   notification.textContent = message;
 
   document.body.append(notification);
+  setTimeout(() => notification.remove(), 3000);
 }
